@@ -1,7 +1,7 @@
 const WinnningCombo = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]]
 
 const GameBoard = (() => { //gameboard shown before, during, and after player chooses move
-  let gameboard = ["O", "O", "O", -1, -1, -1, -1, -1, -1];
+  let gameboard = ["X", "X", "X", -1, -1, -1, -1, -1, -1];
 
   const GetGameboard  = () => gameboard;
 
@@ -38,7 +38,7 @@ const GameBoard = (() => { //gameboard shown before, during, and after player ch
     }
 
     if(CheckCombinations(combinations)){
-      return true;
+      return [true, 'O']; //if o wins alert for tuple
     }
     
     combinations = []
@@ -49,7 +49,7 @@ const GameBoard = (() => { //gameboard shown before, during, and after player ch
     }
 
     if(CheckCombinations(combinations)){
-      return true;
+      return [true, 'X']; //if X wins alert in a tuple
     }
 
     let counter = 0;
@@ -59,10 +59,10 @@ const GameBoard = (() => { //gameboard shown before, during, and after player ch
       }
     }
     if(counter == 0) {
-      return true; 
+      return [true, 'T']; 
     }
 
-    return false
+    return [false, -1];
   }
 
   return {GetGameboard, ShowGameBoard, GameEnd};
@@ -71,18 +71,23 @@ const GameBoard = (() => { //gameboard shown before, during, and after player ch
 
 const PlayerController = ((gameBoard) => { //what eacg player chooses 
   let playerInput = -1;
+
+  
   
   
 })();
 
 const GameFlow = ((gameboard) => { //what moderates our game
+  function Intro(){
+    const playGameButton = document.addEventListener();
+  }
 
   function StartGame(){
-     while(!gameboard.GameEnd()){
+    while(!gameboard.GameEnd()){
         //take in user inputs
 
         gameboard.ShowGameBoard();
-     }
+    }
   }
 })();
 
