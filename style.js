@@ -91,11 +91,11 @@ const GameFlow = ((gameboard) => { //what moderates our game
   }
 })();
 
-const userGameboard = GameBoard;
-userGameboard.ShowGameBoard();
-const i = userGameboard.GameEnd();
+const startButton = document.querySelector(".start-btn");
 
-console.log(i);
+startButton.addEventListener('submit', () => {
+  startButton.close();
+});
 
 
 //in tic-tac-toe we will have 9 item array with null spots of -1. GameBoard is global inside an iife as other globals are, the only other one we'd

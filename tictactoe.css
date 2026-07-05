@@ -1,0 +1,22 @@
+* {
+  margin: 0;
+  padding: 0;
+  justify-items: center;
+}
+
+body {
+  margin-top: 10%;
+  background-image: url(assets/tictactoe.jpeg);
+  background-repeat:no-repeat;
+  background-size: cover;
+}
+
+.title {
+  color: red;
+}
+
+.btn-spot > :first-child {
+  color: blue;
+  margin-top: 40px;
+  padding: 10px;
+}
