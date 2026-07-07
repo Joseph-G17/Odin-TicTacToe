@@ -12,11 +12,29 @@ body {
 }
 
 .title {
-  color: red;
+  color:  black;
 }
 
 .btn-spot > :first-child {
   color: blue;
   margin-top: 40px;
   padding: 10px;
+}
+
+.board-div {
+  display: grid;
+  grid-template-columns: repeat(3, 150px);
+  grid-template-rows: repeat(3, 150px);
+  background-color: grey;
+}
+
+.space {
+  transition: all 0.1s ease;
+  background: none;
+  width: 100%;
+}
+
+.space:hover {
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.2);
 }

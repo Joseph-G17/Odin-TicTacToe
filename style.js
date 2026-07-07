@@ -74,7 +74,7 @@ const PlayerController = ((gameBoard) => { //what eacg player chooses
 
   
   
-  
+
 })();
 
 const GameFlow = ((gameboard) => { //what moderates our game
@@ -91,10 +91,27 @@ const GameFlow = ((gameboard) => { //what moderates our game
   }
 })();
 
-const startButton = document.querySelector(".start-btn");
+const startForm = document.querySelector("form");
+document.body.appendChild(startForm); //form needs to be associated to the browsing context
 
-startButton.addEventListener('submit', () => {
-  startButton.close();
+startForm.addEventListener('submit', (event) => {
+  event.preventDefault()
+  startForm.remove(); 
+
+  let board = document.createElement("div")
+  board.classList.add("board-div");
+  board.innerHTML = `
+    <button class="space" id="space0">space0</button>
+    <button class="space" id="space1">space1</button>
+    <button class="space" id="space2">space2</button>
+    <button class="space" id="space3">space3</button>
+    <button class="space" id="space4">space4</button>
+    <button class="space" id="space5">space5</button>
+    <button class="space" id="space6">space6</button>
+    <button class="space" id="space7">space7</button>
+    <button class="space" id="space8">space8</button>
+  `;
+  document.body.append(board);
 });
 
 
