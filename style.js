@@ -1,7 +1,7 @@
 const WinnningCombo = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]]
 
 const GameBoard = (() => { //gameboard shown before, during, and after player chooses move
-  let gameboard = ["X", "X", "X", -1, -1, -1, -1, -1, -1];
+  let gameboard = [-1, -1, -1, -1, -1, -1, -1, -1, -1];
 
   const GetGameboard  = () => gameboard;
 
@@ -73,47 +73,52 @@ const PlayerController = ((gameBoard) => { //what eacg player chooses
   let playerInput = -1;
 
   
-  
+  return;
 
 })();
 
-const GameFlow = ((gameboard) => { //what moderates our game
-  function Intro(){
-    const playGameButton = document.addEventListener();
-  }
-
-  function StartGame(){
-    while(!gameboard.GameEnd()){
+const GameFlow = (() => { //what moderates our game
+  function StartGame(player_1, player_2){
+    while(GameBoard.GameEnd()){
         //take in user inputs
+        event.preventDefault()
+        startForm.remove(); 
 
-        gameboard.ShowGameBoard();
+        let board = document.createElement("div")
+        board.classList.add("board-div");
+        board.innerHTML = `
+          <button class="space" id="space0">space0</button>
+          <button class="space" id="space1">space1</button>
+          <button class="space" id="space2">space2</button>
+          <button class="space" id="space3">space3</button>
+          <button class="space" id="space4">space4</button>
+          <button class="space" id="space5">space5</button>
+          <button class="space" id="space6">space6</button>
+          <button class="space" id="space7">space7</button>
+          <button class="space" id="space8">space8</button>
+        `;
+        document.body.append(board);
+        GameBoard.ShowGameBoard();
+        return;
     }
   }
+  
+  return {StartGame};
+
 })();
 
 const startForm = document.querySelector("form");
 document.body.appendChild(startForm); //form needs to be associated to the browsing context
 
 startForm.addEventListener('submit', (event) => {
-  event.preventDefault()
-  startForm.remove(); 
-
-  let board = document.createElement("div")
-  board.classList.add("board-div");
-  board.innerHTML = `
-    <button class="space" id="space0">space0</button>
-    <button class="space" id="space1">space1</button>
-    <button class="space" id="space2">space2</button>
-    <button class="space" id="space3">space3</button>
-    <button class="space" id="space4">space4</button>
-    <button class="space" id="space5">space5</button>
-    <button class="space" id="space6">space6</button>
-    <button class="space" id="space7">space7</button>
-    <button class="space" id="space8">space8</button>
-  `;
-  document.body.append(board);
+  event.preventDefault();
+  const player1 = document.getElementById("player1").value;
+  const player2 = document.getElementById("player2").value;
+  console.log(player1, player2);
+  startForm.remove();
+  
+  GameFlow.StartGame(player1, player2);
 });
-
 
 //in tic-tac-toe we will have 9 item array with null spots of -1. GameBoard is global inside an iife as other globals are, the only other one we'd
 //need is the playerController im assuming player one plays after the other on same input!
