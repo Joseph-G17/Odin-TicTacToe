@@ -83,8 +83,27 @@ const GameFlow = (() => { //what moderates our game
         //take in user inputs
         event.preventDefault()
         startForm.remove(); 
+        let playerTurn = 1;
 
-        let board = document.createElement("div")
+        dialogPopup.show();
+        let popupDiv = document.createElement('H1');
+        switch(playerTurn){
+          case 1:
+            popupDiv.innerHTML = `
+              ${player_1}'s turn 
+            `;
+            turn = 2;
+            break;
+          case 2: 
+            popupDiv.innerHTML = `
+              ${player_2}'s turn
+            `;
+            turn = 1;
+            break;
+        };
+        dialogPopup.append(popupDiv);
+
+        let board = document.createElement("div");
         board.classList.add("board-div");
         board.innerHTML = `
           <button class="space" id="space0">space0</button>
@@ -109,7 +128,9 @@ const GameFlow = (() => { //what moderates our game
 
 const startForm = document.querySelector("form");
 document.body.appendChild(startForm); //form needs to be associated to the browsing context
+const dialogPopup = document.querySelector("#turn-popup");
 
+//beginning the funtionality of tic tac toe
 startForm.addEventListener('submit', (event) => {
   event.preventDefault();
   const player1 = document.getElementById("player1").value;

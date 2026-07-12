@@ -11,6 +11,10 @@ body {
   background-size: cover;
 }
 
+p {
+  padding: 10px;
+}
+
 .title {
   color:  black;
 }
@@ -39,6 +43,6 @@ body {
   background-color: rgba(0, 0, 0, 0.2);
 }
 
-p {
-  padding: 10px;
+#turn-popup {
+  justify-self: center;
 }
