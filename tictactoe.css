@@ -1,14 +1,14 @@
 * {
   margin: 0;
   padding: 0;
-  justify-items: center;
 }
 
 body {
-  margin-top: 10%;
   background-image: url(assets/tictactoe.jpeg);
   background-repeat:no-repeat;
   background-size: cover;
+  background-attachment: fixed;
+  background-position: center center;
 }
 
 p {
@@ -17,6 +17,15 @@ p {
 
 .title {
   color:  black;
+  justify-self: center;
+}
+
+.player-inputs {
+  justify-items: center;
+}
+
+.btn-spot {
+  justify-self: center;
 }
 
 .btn-spot > :first-child {
@@ -25,11 +34,16 @@ p {
   padding: 10px;
 }
 
+.game-container {
+  justify-content: center;
+}
+
 .board-div {
   display: grid;
   grid-template-columns: repeat(3, 150px);
   grid-template-rows: repeat(3, 150px);
   background-color: grey;
+  justify-self: center;
 }
 
 .space {
@@ -44,5 +58,7 @@ p {
 }
 
 #turn-popup {
-  justify-self: center;
+  border: none;
+  color: green;
+  padding: 20px;
 }

@@ -5,14 +5,6 @@ const GameBoard = (() => { //gameboard shown before, during, and after player ch
 
   const GetGameboard  = () => gameboard;
 
-  function ShowGameBoard() {
-    console.log(gameboard[0], gameboard[1], gameboard[2]);
-    console.log("---------")
-    console.log(gameboard[3], gameboard[4], gameboard[5]);
-      console.log("---------")
-    console.log(gameboard[6], gameboard[7], gameboard[8]);
-  }
-
   function CheckCombinations(user_combinations){
     for(const combo of WinnningCombo){
       for(let i=0; i<combo.length;i++){
@@ -29,7 +21,7 @@ const GameBoard = (() => { //gameboard shown before, during, and after player ch
   return false;
 }
 
-  function GameEnd(){
+  function GameEnd(){ //TUPLE USED FOR IF GAME ENDS AND WHO WON
     let combinations = [];
     for(let i = 0; i < gameboard.length; i++){ 
       if(gameboard[i] == "O"){ //check for O's
@@ -65,27 +57,64 @@ const GameBoard = (() => { //gameboard shown before, during, and after player ch
     return [false, -1];
   }
 
-  return {GetGameboard, ShowGameBoard, GameEnd};
+  function NewGameBoard(board) { //creates a new gameboard everytime creates the innner html object
+    for(i=0; i<gameboard.length;i++){ //two steps: add class list disabled and make listeners for each button
+      board.innerHTML += `
+        <button class="space" data-space="${i}" data-value="-1">space${i}</button> 
+      `;
+
+      const buttonMove = board.querySelectorAll('.space');
+      buttonMove.document.addEventListener('click', () => {
+        PlayerMove(buttonMove, GameBoard.GetGameboard());
+      });
+    }
+    return board;
+  }
+
+  return {GetGameboard, NewGameBoard ,GameEnd};
   
 })();
 
-const PlayerController = ((gameBoard) => { //what eacg player chooses 
-  let playerInput = -1;
-
+const PlayerController = (() => { //what each player chooses 
   
-  return;
+  function PlayerMove(buttonMove, gameboard) {
+
+    if(GameFlow.GetPlayerTurn == 1){
+      buttonMove.classList.add('disabled');
+      let move = buttonMove.dataset.value = "X";
+      buttonMove.innerHTML = `${move}`;
+      gameboard.splice(buttonMove.dataset.space, 1, move);
+    }
+    else {
+      buttonMove.classList.add('disabled');
+      let move = buttonMove.dataset.value = "O";
+      buttonMove.innerHTML = `${move}`;
+      gameboard.splice(buttonMove.dataset.space, 1, move);
+    }
+
+    return;
+  }
+
+  return {PlayerMove};
 
 })();
 
 const GameFlow = (() => { //what moderates our game
-  function StartGame(player_1, player_2){
-    while(GameBoard.GameEnd()){
-        //take in user inputs
-        event.preventDefault()
-        startForm.remove(); 
-        let playerTurn = 1;
+  let playerTurn = 1;
 
-        dialogPopup.show();
+  const GetPlayerTurn  = () => playerTurn;
+
+  function StartGame(player_1, player_2){
+    event.preventDefault()
+    startForm.remove(); 
+    let playerTurn = 1;
+    
+    let board = document.createElement("div");
+    board.classList.add("board-div");
+    board = GameBoard.NewGameBoard(board);
+    document.body.append(board);
+
+    while(GameBoard.GameEnd()){ //begin game loop
         let popupDiv = document.createElement('H1');
         switch(playerTurn){
           case 1:
@@ -102,27 +131,17 @@ const GameFlow = (() => { //what moderates our game
             break;
         };
         dialogPopup.append(popupDiv);
+        dialogPopup.show();
+        
+        //put in await for popup
 
-        let board = document.createElement("div");
-        board.classList.add("board-div");
-        board.innerHTML = `
-          <button class="space" id="space0">space0</button>
-          <button class="space" id="space1">space1</button>
-          <button class="space" id="space2">space2</button>
-          <button class="space" id="space3">space3</button>
-          <button class="space" id="space4">space4</button>
-          <button class="space" id="space5">space5</button>
-          <button class="space" id="space6">space6</button>
-          <button class="space" id="space7">space7</button>
-          <button class="space" id="space8">space8</button>
-        `;
-        document.body.append(board);
-        GameBoard.ShowGameBoard();
-        return;
+        await PlayerController.WaitForPlayer(); //pass to player
+
+        //here we would need to wait for user to click a square
     }
   }
   
-  return {StartGame};
+  return {GetPlayerTurn, StartGame};
 
 })();
 
