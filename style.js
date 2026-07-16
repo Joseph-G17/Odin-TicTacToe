@@ -138,6 +138,7 @@ const GameFlow = (() => { //what moderates our game
         await PlayerController.WaitForPlayer(); //pass to player
 
         //here we would need to wait for user to click a square
+        return;
     }
   }
   
