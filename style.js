@@ -57,7 +57,7 @@ const GameBoard = (() => { //gameboard shown before, during, and after player ch
     return [false, -1];
   }
 
-  function NewGameBoard(board) { //creates a new gameboard everytime creates the innner html object
+  function NewGameBoard(board) { //creates a new gameboard     everytime creates the innner html object
     for(i=0; i<gameboard.length;i++){ //two steps: add class list disabled and make listeners for each button
       board.innerHTML += `
         <button class="space" data-space="${i}" data-value="-1">space${i}</button> 
