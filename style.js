@@ -62,16 +62,30 @@ const GameBoard = (() => { //gameboard shown before, during, and after player ch
       board.innerHTML += `
         <button class="space" data-space="${i}" data-value="-1">space${i}</button> 
       `;
-
-      const buttonMove = board.querySelectorAll('.space');
-      buttonMove.document.addEventListener('click', () => {
-        PlayerMove(buttonMove, GameBoard.GetGameboard());
-      });
     }
+
+    let buttonMove = document.querySelector('.board-div');
+    //adding event listners to multiple elements 
+    //1. simple
+    /*buttonMove.forEach((move) => {
+      move.addEventListener('click', PlayerController.PlayerMove(buttonMove, GameBoard.GetGameboard));
+    });
+    */
+    //2. as function
+    /*buttonMove.addEventListener('click', () => {
+      PlayerController.PlayerMove(buttonMove, GameBoard.GetGameboard());
+    });
+    */
+    //3. event delegation
+    buttonMove.addEventListener('click', (e) => {
+      if(e.target.classList.contains('space')) {
+        PlayerController.PlayerMove(e.target, GameBoard.GetGameboard());
+      }
+    });
     return board;
   }
 
-  return {GetGameboard, NewGameBoard ,GameEnd};
+  return {GetGameboard, NewGameBoard, GameEnd};
   
 })();
 
@@ -79,19 +93,21 @@ const PlayerController = (() => { //what each player chooses
   
   function PlayerMove(buttonMove, gameboard) {
 
-    if(GameFlow.GetPlayerTurn == 1){
-      buttonMove.classList.add('disabled');
+    if(GameFlow.GetPlayerTurn() == 1){
       let move = buttonMove.dataset.value = "X";
       buttonMove.innerHTML = `${move}`;
       gameboard.splice(buttonMove.dataset.space, 1, move);
+      buttonMove.setAttribute('disabled', true);
+      buttonMove.classList.add('noHover');
     }
     else {
-      buttonMove.classList.add('disabled');
       let move = buttonMove.dataset.value = "O";
       buttonMove.innerHTML = `${move}`;
       gameboard.splice(buttonMove.dataset.space, 1, move);
+      buttonMove.setAttribute('disabled', true);
+      buttonMove.classList.add('noHover');
     }
-
+    console.log(gameboard);
     return;
   }
 
@@ -105,38 +121,32 @@ const GameFlow = (() => { //what moderates our game
   const GetPlayerTurn  = () => playerTurn;
 
   function StartGame(player_1, player_2){
-    event.preventDefault()
     startForm.remove(); 
-    let playerTurn = 1;
-    
+  
     let board = document.createElement("div");
-    board.classList.add("board-div");
-    board = GameBoard.NewGameBoard(board);
+    board.classList.add('board-div');
     document.body.append(board);
+    board = GameBoard.NewGameBoard(board);
+    board.append(board);
 
-    while(GameBoard.GameEnd()){ //begin game loop
+    while(!GameBoard.GameEnd().at(0)){ //begin game loop
         let popupDiv = document.createElement('H1');
         switch(playerTurn){
           case 1:
             popupDiv.innerHTML = `
               ${player_1}'s turn 
             `;
-            turn = 2;
             break;
           case 2: 
             popupDiv.innerHTML = `
               ${player_2}'s turn
             `;
-            turn = 1;
             break;
         };
         dialogPopup.append(popupDiv);
         dialogPopup.show();
         
         //put in await for popup
-
-        await PlayerController.WaitForPlayer(); //pass to player
-
         //here we would need to wait for user to click a square
         return;
     }
