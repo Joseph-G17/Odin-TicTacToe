@@ -107,7 +107,7 @@ const PlayerController = (() => { //what each player chooses
       buttonMove.setAttribute('disabled', true);
       buttonMove.classList.add('noHover');
     }
-    console.log(gameboard);
+
     return;
   }
 
@@ -120,38 +120,49 @@ const GameFlow = (() => { //what moderates our game
 
   const GetPlayerTurn  = () => playerTurn;
 
-  function StartGame(player_1, player_2){
+  async function StartGame(player_1, player_2){
     startForm.remove(); 
   
     let board = document.createElement("div");
     board.classList.add('board-div');
     document.body.append(board);
     board = GameBoard.NewGameBoard(board);
-    board.append(board);
-
+    let popupDiv = document.createElement('H1');
+    console.log(GameBoard.GameEnd().at(0));
     while(!GameBoard.GameEnd().at(0)){ //begin game loop
-        let popupDiv = document.createElement('H1');
         switch(playerTurn){
           case 1:
             popupDiv.innerHTML = `
               ${player_1}'s turn 
             `;
+            //playerTurn = 2; instead handle inside a WaitForPlayer
             break;
           case 2: 
             popupDiv.innerHTML = `
               ${player_2}'s turn
             `;
+            //playerTurn = 1;
             break;
         };
         dialogPopup.append(popupDiv);
         dialogPopup.show();
-        
+
+        await WaitForPopup(popupDiv.parentElement);
         //put in await for popup
         //here we would need to wait for user to click a square
         return;
     }
   }
-  
+
+  function WaitForPopup(popupDiv, delay = 1500){
+    return new Promise ((resolve) => {
+      setTimeout(() => {
+        popupDiv.remove();
+        resolve();
+      }, delay)
+    });
+  }
+
   return {GetPlayerTurn, StartGame};
 
 })();
