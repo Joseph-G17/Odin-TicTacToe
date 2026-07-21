@@ -91,7 +91,7 @@ const GameBoard = (() => { //gameboard shown before, during, and after player ch
 
 const PlayerController = (() => { //what each player chooses 
   
-  function PlayerMove(buttonMove, gameboard) {
+  function PlayerMove(buttonMove, gameboard, player_1, player_2) {
 
     if(GameFlow.GetPlayerTurn() == 1){
       let move = buttonMove.dataset.value = "X";
@@ -99,6 +99,8 @@ const PlayerController = (() => { //what each player chooses
       gameboard.splice(buttonMove.dataset.space, 1, move);
       buttonMove.setAttribute('disabled', true);
       buttonMove.classList.add('noHover');
+      GameFlow.DialogPopup()
+      GameFlow.SwitchPlayer();
     }
     else {
       let move = buttonMove.dataset.value = "O";
@@ -106,7 +108,27 @@ const PlayerController = (() => { //what each player chooses
       gameboard.splice(buttonMove.dataset.space, 1, move);
       buttonMove.setAttribute('disabled', true);
       buttonMove.classList.add('noHover');
+      GameFlow.DialogPopup();
+      GameFlow.SwitchPlayer();
     }
+    
+    let gameEnded = GameBoard.GameEnd().at(0);
+    let whoWon = GameBoard.GameEnd().at(1);
+    if(gameEnded) {
+      switch(whoWon) {
+        case "O":
+          console.log("player 1 won");
+          break;
+        case "X":
+          console.log("player 2 won");
+          break;
+        case "T":
+          console.log("nobody won");
+          break;
+      }
+    }
+
+    console.log(GameBoard.GetGameboard());
 
     return;
   }
@@ -116,20 +138,94 @@ const PlayerController = (() => { //what each player chooses
 })();
 
 const GameFlow = (() => { //what moderates our game
+
   let playerTurn = 1;
+  let popupDiv = document.createElement('H1');
+  let user_1;
+  let user_2;
 
   const GetPlayerTurn  = () => playerTurn;
 
-  async function StartGame(player_1, player_2){
-    startForm.remove(); 
-  
+  function StartGame(player_1, player_2){
+    startForm.remove();
+    user_1 = player_1;
+    user_2 = player_2;
+
     let board = document.createElement("div");
     board.classList.add('board-div');
     document.body.append(board);
     board = GameBoard.NewGameBoard(board);
-    let popupDiv = document.createElement('H1');
-    console.log(GameBoard.GameEnd().at(0));
-    while(!GameBoard.GameEnd().at(0)){ //begin game loop
+    DialogPopup();
+    SwitchPlayer();
+  }
+
+  async function DialogPopup(){ 
+    switch(playerTurn){
+          case 1:
+            popupDiv.innerHTML = `
+              ${user_1}'s turn 
+            `;
+            //playerTurn = 2; instead handle inside a WaitForPlayer
+            break;
+          case 2: 
+            popupDiv.innerHTML = `
+              ${user_2}'s turn
+            `;
+            //playerTurn = 1;
+            break;
+        };
+        dialogPopup.append(popupDiv);
+        dialogPopup.showModal();
+
+        await WaitForPopup(dialogPopup);
+  }
+
+  function WaitForPopup(dialog, delay = 800){
+    return new Promise ((resolve) => {
+      setTimeout(() => {
+        dialog.close();
+        resolve();
+      }, delay)
+    });
+  }
+
+  function SwitchPlayer() {
+    if(playerTurn == 1){
+      playerTurn = 2;
+      return;
+    }
+    else {
+      playerTurn = 1;
+      return;
+    }
+  }
+
+  return {GetPlayerTurn, StartGame, DialogPopup, SwitchPlayer};
+
+})();
+
+const startForm = document.querySelector("form");
+document.body.appendChild(startForm); //form needs to be associated to the browsing context
+const dialogPopup = document.querySelector("#turn-popup");
+
+//beginning the funtionality of tic tac toe
+startForm.addEventListener('submit', (event) => {
+  event.preventDefault();
+  const player1 = document.getElementById("player1").value;
+  const player2 = document.getElementById("player2").value;
+  console.log(player1, player2);
+  startForm.remove();
+  
+  GameFlow.StartGame(player1, player2);
+});
+
+//in tic-tac-toe we will have 9 item array with null spots of -1. GameBoard is global inside an iife as other globals are, the only other one we'd
+//need is the playerController im assuming player one plays after the other on same input!
+
+//retired methods: 
+
+/* 
+while(!GameBoard.GameEnd().at(0)){ //begin game loop
         switch(playerTurn){
           case 1:
             popupDiv.innerHTML = `
@@ -152,35 +248,4 @@ const GameFlow = (() => { //what moderates our game
         //here we would need to wait for user to click a square
         return;
     }
-  }
-
-  function WaitForPopup(popupDiv, delay = 1500){
-    return new Promise ((resolve) => {
-      setTimeout(() => {
-        popupDiv.remove();
-        resolve();
-      }, delay)
-    });
-  }
-
-  return {GetPlayerTurn, StartGame};
-
-})();
-
-const startForm = document.querySelector("form");
-document.body.appendChild(startForm); //form needs to be associated to the browsing context
-const dialogPopup = document.querySelector("#turn-popup");
-
-//beginning the funtionality of tic tac toe
-startForm.addEventListener('submit', (event) => {
-  event.preventDefault();
-  const player1 = document.getElementById("player1").value;
-  const player2 = document.getElementById("player2").value;
-  console.log(player1, player2);
-  startForm.remove();
-  
-  GameFlow.StartGame(player1, player2);
-});
-
-//in tic-tac-toe we will have 9 item array with null spots of -1. GameBoard is global inside an iife as other globals are, the only other one we'd
-//need is the playerController im assuming player one plays after the other on same input!
+*/
