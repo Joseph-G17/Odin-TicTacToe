@@ -71,4 +71,11 @@ button:disabled {
   border: none;
   color: green;
   padding: 20px;
+  justify-self: center;
+  align-self: center;
+}
+
+.button-restart {
+  color: green;
+
 }

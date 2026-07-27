@@ -58,9 +58,9 @@ const GameBoard = (() => { //gameboard shown before, during, and after player ch
   }
 
   function NewGameBoard(board) { //creates a new gameboard     everytime creates the innner html object
-    for(i=0; i<gameboard.length;i++){ //two steps: add class list disabled and make listeners for each button
+    for(let i=0; i<gameboard.length;i++){ //two steps: add class list disabled and make listeners for each button
       board.innerHTML += `
-        <button class="space" data-space="${i}" data-value="-1">space${i}</button> 
+        <button class="space" data-space="${i}" data-value="-1"></button> 
       `;
     }
 
@@ -91,50 +91,59 @@ const GameBoard = (() => { //gameboard shown before, during, and after player ch
 
 const PlayerController = (() => { //what each player chooses 
   
-  function PlayerMove(buttonMove, gameboard, player_1, player_2) {
-
-    if(GameFlow.GetPlayerTurn() == 1){
+  async function PlayerMove(buttonMove, gameboard, player_1, player_2) {
+    /*if(GameFlow.GetPlayerTurn() == 1 && !GameBoard.GameEnd().at(0)){
       let move = buttonMove.dataset.value = "X";
       buttonMove.innerHTML = `${move}`;
       gameboard.splice(buttonMove.dataset.space, 1, move);
       buttonMove.setAttribute('disabled', true);
       buttonMove.classList.add('noHover');
-      GameFlow.DialogPopup()
+      await GameFlow.DialogPopup(false, null);
       GameFlow.SwitchPlayer();
     }
-    else {
+    else if(!GameBoard.GameEnd().at(0)) {
       let move = buttonMove.dataset.value = "O";
       buttonMove.innerHTML = `${move}`;
       gameboard.splice(buttonMove.dataset.space, 1, move);
       buttonMove.setAttribute('disabled', true);
       buttonMove.classList.add('noHover');
-      GameFlow.DialogPopup();
+      await GameFlow.DialogPopup(false, null);
       GameFlow.SwitchPlayer();
     }
-    
-    let gameEnded = GameBoard.GameEnd().at(0);
-    let whoWon = GameBoard.GameEnd().at(1);
-    if(gameEnded) {
+
+    if(GameBoard.GameEnd().at(0)){
+      let whoWon = GameBoard.GameEnd().at(1);
       switch(whoWon) {
         case "O":
-          console.log("player 1 won");
+          GameFlow.DialogPopup(true, whoWon);
           break;
         case "X":
-          console.log("player 2 won");
+          GameFlow.DialogPopup(true, whoWon)
           break;
         case "T":
-          console.log("nobody won");
+          GameFlow.DialogPopup(true, whoWon)
           break;
-      }
+      }  
+    } */
+    const move = GameFlow.GetPlayerTurn() == 1 ? "X" : "O";
+    buttonMove.dataset.value = move;
+    buttonMove.innerHTML = move;
+    gameboard.splice(buttonMove.dataset.space, 1, move);
+    buttonMove.setAttribute('disabled', true);
+    buttonMove.classList.add('noHover');
+
+    const [ended, whoWon] = GameBoard.GameEnd();
+
+    if (ended) {         
+      GameFlow.DialogPopup(true, whoWon);
+      GameFlow.SwitchPlayer();
+    } else {
+      await GameFlow.DialogPopup(false, null);
+      GameFlow.SwitchPlayer();
     }
-
-    console.log(GameBoard.GetGameboard());
-
-    return;
   }
-
+  console.log(GameBoard.GetGameboard());
   return {PlayerMove};
-
 })();
 
 const GameFlow = (() => { //what moderates our game
@@ -155,29 +164,65 @@ const GameFlow = (() => { //what moderates our game
     board.classList.add('board-div');
     document.body.append(board);
     board = GameBoard.NewGameBoard(board);
-    DialogPopup();
+    DialogPopup(false, null);
     SwitchPlayer();
+
   }
 
-  async function DialogPopup(){ 
-    switch(playerTurn){
-          case 1:
-            popupDiv.innerHTML = `
-              ${user_1}'s turn 
-            `;
-            //playerTurn = 2; instead handle inside a WaitForPlayer
-            break;
-          case 2: 
-            popupDiv.innerHTML = `
-              ${user_2}'s turn
-            `;
-            //playerTurn = 1;
-            break;
-        };
-        dialogPopup.append(popupDiv);
-        dialogPopup.showModal();
+  function RestartGame(){
+    location.reload();
+  }
 
-        await WaitForPopup(dialogPopup);
+  async function DialogPopup(gameEnded, whoWon){ 
+    if(!gameEnded){
+      switch(playerTurn){
+        case 1:
+          popupDiv.innerHTML = `
+            ${user_1}'s turn 
+          `;
+          //playerTurn = 2; instead handle inside a WaitForPlayer
+          break;
+        case 2: 
+          popupDiv.innerHTML = `
+            ${user_2}'s turn
+          `;
+          //playerTurn = 1;
+          break;
+      };
+      dialogPopup.append(popupDiv);
+      dialogPopup.showModal();
+
+      await WaitForPopup(dialogPopup);
+    }
+    else {
+      if(whoWon == "T"){
+        popupDiv.innerHTML = `
+        Tie Game!
+        <button class="button-restart"> Play Again! </button>
+      `;
+      }
+      else if (whoWon == "X") {
+        popupDiv.innerHTML = `
+          ${user_2} wins!
+          <button class="button-restart"> Play Again! </button>
+        `;
+      }
+      else {
+        popupDiv.innerHTML = `
+          ${user_1} wins!
+          <button class="button-restart"> Play Again! </button>
+        `;
+      }
+
+      dialogPopup.append(popupDiv);
+      dialogPopup.showModal();
+
+      const restart = document.querySelector(".button-restart");
+      restart.addEventListener('click', () => {
+        GameFlow.RestartGame();
+      });
+
+    }
   }
 
   function WaitForPopup(dialog, delay = 800){
@@ -200,7 +245,7 @@ const GameFlow = (() => { //what moderates our game
     }
   }
 
-  return {GetPlayerTurn, StartGame, DialogPopup, SwitchPlayer};
+  return {GetPlayerTurn, StartGame, DialogPopup, SwitchPlayer, RestartGame};
 
 })();
 
