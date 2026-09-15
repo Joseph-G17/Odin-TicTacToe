@@ -1,37 +1,105 @@
+@font-face {
+    font-family: 'thasadithregular';
+    src: url('assets/thasadith/thasadith-regular-webfont.woff2') format('woff2'),
+         url('assets/thasadith/thasadith-regular-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'thasadithbold';
+    src: url('assets/thasadith/thasadith-bold-webfont.woff2') format('woff2'),
+         url('assets/thasadith/thasadith-bold-webfont.woff') format('woff');
+    font-weight: bolder;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'thasadithbold_italic';
+    src: url('assets/thasadith/thasadith-bolditalic-webfont.woff2') format('woff2'),
+         url('assets/thasadith/thasadith-bolditalic-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'thasadithitalic';
+    src: url('assets/thasadith/thasadith-italic-webfont.woff2') format('woff2'),
+         url('assets/thasadith/thasadith-italic-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
 * {
-  margin: 0;
+
   padding: 0;
+
 }
 
 body {
-  background-image: url(assets/tictactoe.jpeg);
+  background-image: url(assets/catbackground.png);
   background-repeat:no-repeat;
-  background-size: cover;
+  background-size: 100% 100%;
   background-attachment: fixed;
-  background-position: center center;
+  font-family: "thasadithregular", "serif";
 }
 
 p {
-  padding: 10px;
+
+  font-size: 3.5vh;
+}
+
+label {
+  padding-right: 10px;
+  color: lightcyan;
+}
+input{
+  font-family: "thasadithbold", "serif";
+  color: black;
+  width: 300px;
+  height: 50px;
+  field-sizing: fixed;
+  font-size: 3.5vh;
+  background-color: #999999;
+}
+
+button {
+  font-family: "thasadithbold", "serif";
+  color: black;
+  background-color: #999999;
+  font-size: 2vh;
 }
 
 .title {
-  color:  black;
+  color: lightblue;
   justify-self: center;
+  font-family: "thasadithbold", "serif";
+  font-size: 7vh;
 }
 
 .player-inputs {
   justify-items: center;
+  align-items: center;
+  font-family: "thasadithregular", "serif";
 }
 
 .btn-spot {
   justify-self: center;
+  margin-top: 100px;
+}
+.start-btn:hover {
+  transition: all 0.15s ease;
+  background-color: white;
 }
 
-.btn-spot > :first-child {
-  color: blue;
-  margin-top: 40px;
+.start-btn {
+  color: black;
   padding: 10px;
+  font-family: "thasadithbold", "serif";
 }
 
 .game-container {
@@ -68,14 +136,18 @@ button:disabled {
 }
 
 #turn-popup {
-  border: none;
-  color: green;
+  color: lightcyan;
   padding: 20px;
-  justify-self: center;
-  align-self: center;
+  background-color: black;
 }
 
 .button-restart {
-  color: green;
+  color: lightblue;
+  font-size: 3.5vh;
+  
+}
 
+.button-restart:hover {
+  transition: all .15s ease;
+  background-color: white;
 }

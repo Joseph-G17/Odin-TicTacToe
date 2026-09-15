@@ -91,40 +91,7 @@ const GameBoard = (() => { //gameboard shown before, during, and after player ch
 
 const PlayerController = (() => { //what each player chooses 
   
-  async function PlayerMove(buttonMove, gameboard, player_1, player_2) {
-    /*if(GameFlow.GetPlayerTurn() == 1 && !GameBoard.GameEnd().at(0)){
-      let move = buttonMove.dataset.value = "X";
-      buttonMove.innerHTML = `${move}`;
-      gameboard.splice(buttonMove.dataset.space, 1, move);
-      buttonMove.setAttribute('disabled', true);
-      buttonMove.classList.add('noHover');
-      await GameFlow.DialogPopup(false, null);
-      GameFlow.SwitchPlayer();
-    }
-    else if(!GameBoard.GameEnd().at(0)) {
-      let move = buttonMove.dataset.value = "O";
-      buttonMove.innerHTML = `${move}`;
-      gameboard.splice(buttonMove.dataset.space, 1, move);
-      buttonMove.setAttribute('disabled', true);
-      buttonMove.classList.add('noHover');
-      await GameFlow.DialogPopup(false, null);
-      GameFlow.SwitchPlayer();
-    }
-
-    if(GameBoard.GameEnd().at(0)){
-      let whoWon = GameBoard.GameEnd().at(1);
-      switch(whoWon) {
-        case "O":
-          GameFlow.DialogPopup(true, whoWon);
-          break;
-        case "X":
-          GameFlow.DialogPopup(true, whoWon)
-          break;
-        case "T":
-          GameFlow.DialogPopup(true, whoWon)
-          break;
-      }  
-    } */
+  async function PlayerMove(buttonMove, gameboard) {
     const move = GameFlow.GetPlayerTurn() == 1 ? "X" : "O";
     buttonMove.dataset.value = move;
     buttonMove.innerHTML = move;
@@ -203,13 +170,13 @@ const GameFlow = (() => { //what moderates our game
       }
       else if (whoWon == "X") {
         popupDiv.innerHTML = `
-          ${user_2} wins!
+          <p> ${user_2} wins! </p>
           <button class="button-restart"> Play Again! </button>
         `;
       }
       else {
         popupDiv.innerHTML = `
-          ${user_1} wins!
+          <p> ${user_1} wins! </p>
           <button class="button-restart"> Play Again! </button>
         `;
       }
@@ -266,31 +233,3 @@ startForm.addEventListener('submit', (event) => {
 
 //in tic-tac-toe we will have 9 item array with null spots of -1. GameBoard is global inside an iife as other globals are, the only other one we'd
 //need is the playerController im assuming player one plays after the other on same input!
-
-//retired methods: 
-
-/* 
-while(!GameBoard.GameEnd().at(0)){ //begin game loop
-        switch(playerTurn){
-          case 1:
-            popupDiv.innerHTML = `
-              ${player_1}'s turn 
-            `;
-            //playerTurn = 2; instead handle inside a WaitForPlayer
-            break;
-          case 2: 
-            popupDiv.innerHTML = `
-              ${player_2}'s turn
-            `;
-            //playerTurn = 1;
-            break;
-        };
-        dialogPopup.append(popupDiv);
-        dialogPopup.show();
-
-        await WaitForPopup(popupDiv.parentElement);
-        //put in await for popup
-        //here we would need to wait for user to click a square
-        return;
-    }
-*/
